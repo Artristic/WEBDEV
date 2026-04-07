@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleMode()" id="modeBtn">🌙 Dark</div>
+
+<header class="topbar">
+<img src="logo.png" class="logo">
+<h1 class="brand">KnowShare</h1>
+</header>
+
+<div class="dashboard">
+
+<!-- SIDEBAR -->
+<div class="sidebar glass">
+<img id="avatar" class="avatar">
+<h3 id="name"></h3>
+
+<button onclick="location='profile.html'">Profile</button>
+<button onclick="logout()">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div>
+
+<div class="share-box glass">
+<textarea id="postInput" placeholder="Share knowledge..."></textarea>
+<button onclick="post()">Post</button>
+</div>
+
+<div id="feed"></div>
+
+</div>
+
+<!-- AI CHATBOX -->
+<div class="ai-box glass">
+<h3>AI Chat</h3>
+
+<div id="chat"></div>
+
+<input id="aiInput" placeholder="Ask something...">
+<button onclick="sendAI()">Send</button>
+</div>
+
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,collection,addDoc,serverTimestamp,query,orderBy,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyCFqcGqSl5OWEpG5W3lErLcyvN9kdVLl0Y",
+authDomain:"knowshare-ba073.firebaseapp.com",
+projectId:"knowshare-ba073",
+storageBucket:"knowshare-ba073.firebasestorage.app",
+messagingSenderId:"5820818323",
+appId:"1:5820818323:web:103961c761a25cd5437e66"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let userData;
+
+onAuthStateChanged(auth,async user=>{
+if(!user) location="index.html";
+
+const snap=await getDoc(doc(db,"users",user.uid));
+userData=snap.data();
+
+name.innerText=userData.name;
+avatar.src=userData.avatar;
+});
+
+window.logout=()=>{signOut(auth);location="index.html";};
+
+window.post=async()=>{
+if(!postInput.value) return;
+
+await addDoc(collection(db,"posts"),{
+content:postInput.value,
+name:userData.name,
+avatar:userData.avatar,
+createdAt:serverTimestamp()
+});
+
+postInput.value="";
+};
+
+/* FEED */
+onSnapshot(query(collection(db,"posts"),orderBy("createdAt","desc")),snap=>{
+feed.innerHTML="";
+snap.forEach(doc=>{
+const d=doc.data();
+
+feed.innerHTML+=`
+<div class="post glass">
+<div class="post-header">
+<img src="${d.avatar}" class="post-avatar">
+<b>${d.name}</b>
+<span class="timestamp">${d.createdAt?.toDate().toLocaleString()||"Now"}</span>
+</div>
+<p>${d.content}</p>
+<button onclick="explainPost('${d.content}')">Explain</button>
+</div>`;
+});
+});
+
+/* 🤖 AI CHAT */
+window.sendAI=async()=>{
+const input=document.getElementById("aiInput");
+const chat=document.getElementById("chat");
+
+if(!input.value) return;
+
+chat.innerHTML+=`<p><b>You:</b> ${input.value}</p>`;
+
+const res=await fetch("https://api.openai.com/v1/chat/completions",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer YOUR_OPENAI_API_KEY"
+},
+body:JSON.stringify({
+model:"gpt-4o-mini",
+messages:[
+{role:"system",content:"You are a helpful tutor."},
+{role:"user",content:input.value}
+]
+})
+});
+
+const data=await res.json();
+
+chat.innerHTML+=`<p><b>AI:</b> ${data.choices[0].message.content}</p>`;
+
+chat.scrollTop=chat.scrollHeight;
+input.value="";
+};
+
+/* EXPLAIN */
+window.explainPost=async(text)=>{
+const res=await fetch("https://api.openai.com/v1/chat/completions",{
+method:"POST",
+headers:{
+"Content-Type":"application/json",
+"Authorization":"Bearer DITO_YUNG_OPEN_AI"
+},
+body:JSON.stringify({
+model:"gpt-4o-mini",
+messages:[
+{role:"system",content:"Explain simply for students."},
+{role:"user",content:text}
+]
+})
+});
+
+const data=await res.json();
+alert(data.choices[0].message.content);
+};
+</script>
+
+<script>
+function toggleMode(){
+document.body.classList.toggle("light");
+const btn=document.getElementById("modeBtn");
+btn.innerText=document.body.classList.contains("light")?"🌞 Light":"🌙 Dark";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleMode()" id="modeBtn">🌙 Dark</div>
+
+<header class="topbar">
+<img src="logo.png" class="logo">
+<h1 class="brand">KnowShare</h1>
+</header>
+
+<div class="auth-container glass">
+
+<div class="auth-left"></div>
+
+<div class="auth-right">
+<h2>Sign Up</h2>
+
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button id="registerBtn">Sign Up</button>
+
+<p class="auth-link">
+Already have an account? <a href="index.html">Log In</a>
+</p>
+
+</div>
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyCFqcGqSl5OWEpG5W3lErLcyvN9kdVLl0Y",
+authDomain:"knowshare-ba073.firebaseapp.com",
+projectId:"knowshare-ba073",
+storageBucket:"knowshare-ba073.firebasestorage.app",
+messagingSenderId:"5820818323",
+appId:"1:5820818323:web:103961c761a25cd5437e66"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+const email=document.getElementById("email");
+const password=document.getElementById("password");
+
+document.getElementById("registerBtn").onclick=registerUser;
+
+async function registerUser(){
+try{
+const user=await createUserWithEmailAndPassword(auth,email.value,password.value);
+
+await setDoc(doc(db,"users",user.user.uid),{
+name:"New User",
+bio:"Edit your profile",
+avatar:"https://i.pravatar.cc/150",
+joined:serverTimestamp()
+});
+
+alert("Account created!");
+window.location.href="dashboard.html";
+
+}catch(e){
+alert(e.message);
+}
+}
+</script>
+
+<script>
+function toggleMode(){
+document.body.classList.toggle("light");
+const btn=document.getElementById("modeBtn");
+btn.innerText=document.body.classList.contains("light")?"🌞 Light":"🌙 Dark";
+}
+</script>
+
+</body>
+</html>

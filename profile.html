@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Profile</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleMode()" id="modeBtn">🌙 Dark</div>
+
+<header class="topbar">
+<img src="logo.png" class="logo">
+<h1 class="brand">KnowShare</h1>
+</header>
+
+<div class="profile-page glass">
+
+<img id="avatar" class="profile-avatar">
+
+<h2 id="name"></h2>
+
+<p id="bio"></p>
+
+<button onclick="location='edit-profile.html'">Edit Profile</button>
+<button onclick="location='dashboard.html'">Back</button>
+
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+apiKey:"AIzaSyCFqcGqSl5OWEpG5W3lErLcyvN9kdVLl0Y",
+authDomain:"knowshare-ba073.firebaseapp.com",
+projectId:"knowshare-ba073",
+storageBucket:"knowshare-ba073.firebasestorage.app",
+messagingSenderId:"5820818323",
+appId:"1:5820818323:web:103961c761a25cd5437e66"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+onAuthStateChanged(auth,async user=>{
+if(!user) location="index.html";
+
+const snap=await getDoc(doc(db,"users",user.uid));
+const data=snap.data();
+
+document.getElementById("name").innerText=data.name;
+document.getElementById("bio").innerText=data.bio;
+document.getElementById("avatar").src=data.avatar;
+});
+</script>
+
+<script>
+function toggleMode(){
+document.body.classList.toggle("light");
+const btn=document.getElementById("modeBtn");
+btn.innerText=document.body.classList.contains("light")?"🌞 Light":"🌙 Dark";
+}
+</script>
+
+</body>
+</html>

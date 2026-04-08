@@ -1,0 +1,44 @@
+ @font-face {
+    font-family: "JetBrains-Bold";
+    src: url(/frontend/assets/fonts/JetBrainsMono-ExtraBold.ttf);
+}
+
+@font-face {
+    font-family: "JetBrains-Regular";
+    src: url(/frontend/assets/fonts/JetBrainsMono-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Jeju-Regular";
+    src: url(/frontend/assets/fonts/JejuMyeongjo-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Poppins-M";
+    src: url(/frontend/assets/fonts/Poppins-Medium.ttf);
+}
+
+@font-face {
+    font-family: "Poppins-R";
+    src: url(/frontend/assets/fonts/Poppins-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Poppins-SB";
+    src: url(/frontend/assets/fonts/Poppins-SemiBold.ttf);
+}
+
+@font-face {
+    font-family: "Inria-R";
+    src: url(/frontend/assets/fonts/InriaSerif-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Inria-L";
+    src: url(/frontend/assets/fonts/InriaSerif-Light.ttf);
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url(/frontend/assets/fonts/Inter.ttf);
+}

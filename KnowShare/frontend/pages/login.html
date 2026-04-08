@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnownShare - Login</title>
+    <link rel="stylesheet" href="/frontend/styles/login.css">
+    <link rel="stylesheet" href="/frontend/styles/fonts.css">
+</head>
+<body>
+    <div class="mainContainer">
+        <div class="leftContainer">
+            <div class="spacer"></div>
+            <div class="topContainer">
+                <div class="topLeftText">
+                    <h1>Get Started with Us</h1>
+                </div>
+                <div class="topRightText">
+                    <p>Complete these easy steps to register your account</p>
+                </div>
+            </div>
+            <div class="bottomContainer">
+                <div>
+                    <span class="step">1</span>
+                    <p>Sign up your account</p>
+                </div>
+                <div>
+                    <span class="step">2</span>
+                    <p>Set up your workspace</p>
+                </div>
+                <div>
+                    <span class="step">3</span>
+                    <p>Set up your profile</p>
+                </div>
+            </div>
+        </div>
+        <div class="rightContainer">
+            <div class="topContainer">
+                <a href="signu.html"><img src="/frontend/assets/icons/back.png" alt="back_button"></a> <!--Homepage dpat href nito-->>
+            </div>
+            <div class="loginHeaderContainer">
+                <h1>Log in</h1>
+                <p>Don't have an account?<a href="signup.html">Create an Account</a></p>
+            </div>
+            <div class="loginInputFields">
+                <form>
+                    <div class="inputHolder">
+                        <label for="email">Email Address</label>
+                        <input type="text" name="email" id="email">
+                    </div>
+                    <div class="passwordField">
+                        <div>
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password">
+                        </div>
+                        <div class="forgotPasswordField">                        
+                            <a href="" class="forgotPasswordText">Forgot Password?</a>
+                        </div>
+                    </div>
+                    <div class="submitHolder">
+                        <input type="submit" name="submit" value="Log in">
+                        <div class="terms">
+                            <input type="checkbox">
+                            <label>I agree to the <a>Terms & Condition</a></label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="socialButtons">
+                <div class="socialHeader">
+                    <div class="designLine"></div>
+                    <p>or</p>
+                    <div class="designLine"></div>
+                </div>
+                <div class="socialActionContainer">
+                    <button type="button" class="socialBtn">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" class="socialIcon">
+                        Continue with Google
+                    </button>
+                    <button type="button" class="socialBtn">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook" class="socialIcon">
+                        Continue with Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,signInWithEmailAndPassword,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey:"AIzaSyCFqcGqSl5OWEpG5W3lErLcyvN9kdVLl0Y",
+    authDomain:"knowshare-ba073.firebaseapp.com",
+    projectId:"knowshare-ba073",
+    storageBucket:"knowshare-ba073.firebasestorage.app",
+    messagingSenderId:"5820818323",
+    appId:"1:5820818323:web:103961c761a25cd5437e66"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+document.querySelector("form").addEventListener("submit", ProcessData);
+
+function loginUser(email, password){
+    signInWithEmailAndPassword(auth,email,password)
+    .then( () => {
+        window.location.href="/frontend/pages/dashboard.html"
+        }
+    )
+    .catch(()=> {
+        alert("Incorrect Email or Password")
+        }
+    );
+}
+
+document.addEventListener("keydown",e=>{
+    if(e.key==="Enter") loginUser();
+    }
+);
+
+onAuthStateChanged(auth,user=>{
+    if (user)
+        window.location.href="/frontend/pages/dashboard.html";
+        }
+    );
+
+function ProcessData(event) {
+    event.preventDefault()
+    
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    
+    loginUser(email.value, password.value)
+}
+</script>
+</body>
+</html>

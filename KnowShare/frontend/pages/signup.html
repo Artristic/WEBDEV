@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnownShare - Login</title>
+    <link rel="stylesheet" href="/frontend/styles/signup.css">
+    <link rel="stylesheet" href="/frontend/styles/fonts.css">
+</head>
+<body>
+    <div class="mainContainer">
+        <div class="leftContainer">
+            <div class="spacer"></div>
+            <div class="topContainer">
+                <div class="topLeftText">
+                    <h1>Get Started with Us</h1>
+                </div>
+                <div class="topRightText">
+                    <p>Complete these easy steps to register your account</p>
+                </div>
+            </div>
+            <div class="bottomContainer">
+                <div>
+                    <span class="step">1</span>
+                    <p>Sign up your account</p>
+                </div>
+                <div>
+                    <span class="step">2</span>
+                    <p>Set up your workspace</p>
+                </div>
+                <div>
+                    <span class="step">3</span>
+                    <p>Set up your profile</p>
+                </div>
+            </div>
+        </div>
+        <div class="rightContainer">
+            <div class="topContainer">
+                <a href="login.html"><img src="/frontend/assets/icons/back.png" alt="back_button"></a>
+            </div>
+            <div class="loginHeaderContainer">
+                <h1>Create an Account</h1>
+                <p>Already have an Account?<a href="login.html">Log in</a></p>
+            </div>
+            <div class="loginInputFields">
+                <form>
+                    <div class="usernameHolder">
+                        <div class="firstName">
+                            <label for="fn">First Name</label>
+                            <input type="text" name="fn" id="firstName">
+                        </div>
+                        <div class="lastName">
+                            <label for="ln">Last Name</label>
+                            <input type="text" name="ln" id="lastName">
+                        </div>
+                    </div>
+                    <div class="inputHolder">
+                        <label for="email">Email Address</label>
+                        <input type="email" name="email" id="email">
+                    </div>
+                    <div class="passwordField">
+                        <div>
+                            <label for="password">Password</label>
+                            <input type="password" name="password" id="password">
+                        </div>
+                        <div class="forgotPasswordField">                        
+                            <input type="checkbox">
+                            <label>I agree to the <a>Terms & Condition</a></label>
+                        </div>
+                    </div>
+                    <div class="submitHolder">
+                        <input type="submit" name="signup" value="Create Account">
+                    </div>
+                </form>
+            </div>
+            <div class="socialButtons">
+                <div class="socialHeader">
+                    <div class="designLine"></div>
+                    <p>or</p>
+                    <div class="designLine"></div>
+                </div>
+                <div class="socialActionContainer">
+                    <button type="button" class="socialBtn">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" class="socialIcon">
+                        Continue with Google
+                    </button>
+                    <button type="button" class="socialBtn">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="Facebook" class="socialIcon">
+                        Continue with Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="module">
+        
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,createUserWithEmailAndPassword}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig={
+        apiKey:"AIzaSyCFqcGqSl5OWEpG5W3lErLcyvN9kdVLl0Y",
+        authDomain:"knowshare-ba073.firebaseapp.com",
+        projectId:"knowshare-ba073",
+        storageBucket:"knowshare-ba073.firebasestorage.app",
+        messagingSenderId:"5820818323",
+        appId:"1:5820818323:web:103961c761a25cd5437e66"
+    };
+
+    const app=initializeApp(firebaseConfig);
+    const auth=getAuth(app);
+    const db=getFirestore(app);
+
+    const firstName=document.getElementById("firstName");
+    const lastName=document.getElementById("lastName");
+    const email=document.getElementById("email");
+    const password=document.getElementById("password");
+
+    document.querySelector("form").addEventListener("submit", registerUser);
+
+    async function registerUser(event){
+        event.preventDefault()
+        try{
+            const user= await createUserWithEmailAndPassword(auth,email.value,password.value, firstName.value, lastName.value); // EDIT MOTONG DITO ADD CA FIRSTNAME CHAKA LASTNAME CONTAINER DON SA FIREBASE MO
+
+        await setDoc(doc(db,"users",user.user.uid),{
+            name: user.firstName + user.lastName,
+            bio:"Edit your profile",
+            avatar:"https://i.pravatar.cc/150",
+            joined:serverTimestamp()
+        });
+
+        alert("Account created!");
+        window.location.href="dashboard.html";
+
+        } catch(e) {
+            alert(e.message);
+        }
+    }
+</script>
+    
+</body>
+</html>

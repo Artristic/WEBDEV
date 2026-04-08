@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KnowShare Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleMode()" id="modeBtn">🌙 Dark</div>
+
+<header class="topbar">
+<img src="logo.png" class="logo">
+<h1 class="brand">KnowShare</h1>
+</header>
+
+<div class="auth-container glass">
+
+<div class="auth-left"></div>
+
+<div class="auth-right">
+<h2>Log In</h2>
+
+<input id="email" type="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button id="loginBtn">Log In</button>
+
+<p class="auth-link">
+Don't have an account? <a href="register.html">Sign Up</a>
+</p> 
+
+</div>
+</div>
+
+<script type="module">
+    import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import{getAuth,signInWithEmailAndPassword,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey:"AIzaSyCFqcGqSl5OWEpG5W3lErLcyvN9kdVLl0Y",
+        authDomain:"knowshare-ba073.firebaseapp.com",
+        projectId:"knowshare-ba073",
+        storageBucket:"knowshare-ba073.firebasestorage.app",
+        messagingSenderId:"5820818323",
+        appId:"1:5820818323:web:103961c761a25cd5437e66"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    document.getElementById("loginBtn").onclick=loginUser;
+
+    function loginUser(){
+        signInWithEmailAndPassword(auth,email.value,password.value)
+        .then( () => {
+            window.location.href="dashboard.html"
+            }
+        )
+        .catch(()=> {
+            alert("Incorrect Email or Password")
+            }
+        );
+    }
+
+    document.addEventListener("keydown",e=>{
+        if(e.key==="Enter") loginUser();
+        }
+    );
+
+    onAuthStateChanged(auth,user=>{
+        if (user)
+            window.location.href="dashboard.html";
+            }
+        );
+
+    function toggleMode(){
+    document.body.classList.toggle("light");
+    const btn=document.getElementById("modeBtn");
+    btn.innerText=document.body.classList.contains("light")?"🌞 Light":"🌙 Dark";
+    }
+</script>
+
+</body>
+</html>
